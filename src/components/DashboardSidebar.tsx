@@ -58,7 +58,7 @@ export const DashboardSidebar = () => {
     path: "/dashboard/admin/settings"
   }];
   const links = user?.role === "student" ? studentLinks : user?.role === "instructor" ? instructorLinks : adminLinks;
-  return <div className="w-64 bg-white h-full border-r border-gray-200">
+  return <div className="w-64 bg-white h-full border-r border-gray-200 mt-20 mb-5">
       <nav className="mt-5 px-2">
         <div className="space-y-1">
           {links.map(link => {

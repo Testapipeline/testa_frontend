@@ -96,7 +96,7 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
   };
 
   return (
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-20 mb-5">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Upload Examination</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="w-3/4 mx-auto">
