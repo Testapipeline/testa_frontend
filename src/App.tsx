@@ -13,6 +13,9 @@ import { ExamDetails } from "./pages/ExamDetails";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ExamUploadForm } from "./components/ExamUploadForm";
 import { AuthProvider } from "./contexts/AuthContext";
+import { InstructorSettings } from "./components/InstructorSettings";
+import {Earnings} from "./components/Earnings";
+import {MyUploads} from "./components/MyUploads";
 
 export function App() {
     return (
@@ -32,6 +35,9 @@ export function App() {
                             <Route path="/dashboard/instructor/upload" element={<ProtectedRoute role="instructor"><ExamUploadForm onSubmit={function(data: FormData): Promise<void> { throw new Error("Function not implemented."); }} /></ProtectedRoute>} />
                             <Route path="/dashboard/admin/*" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
                             <Route path="/dashboard/admin/approvals" element={<ProtectedRoute role="admin"><AdminApprovals /></ProtectedRoute>} />
+                            <Route path="/dashboard/instructor/settings" element={<ProtectedRoute role="instructor"><InstructorSettings /></ProtectedRoute>} />
+                            <Route path="/dashboard/instructor/earnings" element={<ProtectedRoute role="instructor"><Earnings /></ProtectedRoute>} />
+                            <Route path="/dashboard/instructor/uploads" element={<ProtectedRoute role="instructor"><MyUploads /></ProtectedRoute>} />
                         </Routes>
                     </div>
                     <Footer />

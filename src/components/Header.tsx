@@ -14,9 +14,10 @@ export const Header = () => {
     navigate("/");
   };
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Searching for:", searchText);
+  const handleSearch = (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
+    navigate(`/exams?search=${encodeURIComponent(searchText)}`);
+    setShowSidebar(false);
   };
 
   return (
@@ -38,7 +39,10 @@ export const Header = () => {
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
                   />
-                  <Search className="absolute left-5 top-3 h-6 w-6 text-gray-400" />
+                  <Search
+                      className="absolute left-5 top-3 h-6 w-6 text-gray-400 cursor-pointer"
+                      onClick={() => handleSearch()}
+                  />
                 </form>
               </div>
               <div className="flex items-center space-x-4">
@@ -91,8 +95,9 @@ export const Header = () => {
           <div className="absolute top-0 right-0 h-full w-full shadow-lg flex justify-center items-center">
             <button
                 onClick={() => setShowSidebar(false)}
-                className="absolute top-5 right-5 bg-black text-white rounded-full p-2 flex items-center justify-center">
-              <X className="h-6 w-6"/>
+                className="absolute top-5 right-5 bg-black text-white rounded-full p-2 flex items-center justify-center"
+            >
+              <X className="h-6 w-6" />
             </button>
             <div className="w-100 h-80 relative">
               <div className="p-4 mt-12 text-center">
@@ -101,11 +106,14 @@ export const Header = () => {
                   <input
                       type="search"
                       placeholder="Search exams..."
-                      className="w-full pl-16 pr-8 py-4 rounded-lg text-xl bg-black bg-opacity-50 text-white focus:outline-none "
+                      className="w-full pl-16 pr-8 py-4 rounded-lg text-xl bg-black bg-opacity-50 text-white focus:outline-none"
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
                   />
-                  <Search className="absolute left-6 top-4 h-6 w-6 text-gray-400"/>
+                  <Search
+                      className="absolute left-6 top-4 h-6 w-6 text-gray-400 cursor-pointer"
+                      onClick={() => handleSearch()}
+                  />
                 </form>
               </div>
             </div>

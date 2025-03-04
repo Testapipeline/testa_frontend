@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Upload, X } from "lucide-react";
+import { DashboardLayout } from "./DashboardLayout";
 
 type ExamUploadFormProps = {
   onSubmit: (data: FormData) => Promise<void>;
@@ -96,6 +97,7 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
   };
 
   return (
+    <DashboardLayout>
       <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-20 mb-5">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Upload Examination</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -237,5 +239,6 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
           </div>
         </form>
       </div>
+    </DashboardLayout>
   );
 };
