@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "./DashboardLayout.tsx";
 
-export const InstructorSettings = () => {
+export const Settings = () => {
     const navigate = useNavigate();
 
     const handleDeleteAccount = async () => {

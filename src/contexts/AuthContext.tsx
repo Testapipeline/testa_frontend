@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{
           id: "1",
           name: "John Doe",
           email: "john@example.com",
-          role: "instructor"
+          role: "admin"
         });
       }
       setIsLoading(false);
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{
         id: "1",
         name: "John Doe",
         email,
-        role: "instructor" as const
+        role: "admin" as const
       };
       localStorage.setItem("auth_token", "mock_token");
       setUser(mockUser);
