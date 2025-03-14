@@ -2,11 +2,9 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ExamFilters } from "../components/ExamFilters";
 import { ExamCard } from "../components/ExamCard";
-import { ExamSubscriptionModal } from "../components/ExamSubscriptionModal";
 
 export const ExamList = () => {
   const [searchParams] = useSearchParams();
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [filters, setFilters] = useState({
     department: searchParams.get("department") || "All Departments",
     unit: "All Units",
@@ -100,18 +98,10 @@ export const ExamList = () => {
     });
   };
 
-  const handleSubscribe = (planId: string) => {
-    // Handle subscription logic
-    setShowSubscriptionModal(false);
-  };
-
   return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 mb-5">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Available Exams</h1>
-          <button onClick={() => setShowSubscriptionModal(true)} className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-            Subscribe
-          </button>
         </div>
         <ExamFilters
             selectedDepartment={filters.department}
@@ -123,7 +113,6 @@ export const ExamList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredExams.map(exam => <ExamCard key={exam.id} exam={exam} />)}
         </div>
-        <ExamSubscriptionModal isOpen={showSubscriptionModal} onClose={() => setShowSubscriptionModal(false)} onSubscribe={handleSubscribe} />
       </div>
   );
 };
