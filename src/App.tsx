@@ -14,12 +14,17 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ExamUploadForm } from "./components/ExamUploadForm";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Settings } from "./components/Settings";
-import {Earnings} from "./components/Earnings";
-import {MyUploads} from "./components/MyUploads";
-import {MyExams} from "./components/MyExams";
+import { Earnings } from "./components/Earnings";
+import { MyUploads } from "./components/MyUploads";
+import { MyExams } from "./components/MyExams";
 import { ManageUser } from "./pages/ManageUser";
 
 export function App() {
+    const handleExamUpload = async (data: FormData) => {
+        // Implement the logic to handle the form submission
+        console.log("Form data submitted:", data);
+    };
+
     return (
         <BrowserRouter>
             <AuthProvider>
@@ -34,7 +39,7 @@ export function App() {
                             <Route path="/exam/:id" element={<ExamDetails />} />
                             <Route path="/dashboard/student/*" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
                             <Route path="/dashboard/instructor/*" element={<ProtectedRoute role="instructor"><InstructorDashboard /></ProtectedRoute>} />
-                            <Route path="/dashboard/instructor/upload" element={<ProtectedRoute role="instructor"><ExamUploadForm onSubmit={function(data: FormData): Promise<void> { throw new Error("Function not implemented."); }} /></ProtectedRoute>} />
+                            <Route path="/dashboard/instructor/upload" element={<ProtectedRoute role="instructor"><ExamUploadForm onSubmit={handleExamUpload} /></ProtectedRoute>} />
                             <Route path="/dashboard/admin/*" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
                             <Route path="/dashboard/admin/approvals" element={<ProtectedRoute role="admin"><AdminApprovals /></ProtectedRoute>} />
                             <Route path="/dashboard/instructor/settings" element={<ProtectedRoute role="instructor"><Settings /></ProtectedRoute>} />
