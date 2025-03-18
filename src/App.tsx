@@ -17,7 +17,6 @@ import { CourseProvider } from "./contexts/CourseContext";
 import { ExamProvider} from "./contexts/ExamContext.tsx";
 import { Settings } from "./components/Settings";
 import { Earnings } from "./components/Earnings";
-import { MyUploads } from "./components/MyUploads";
 import { MyExams } from "./components/MyExams";
 import { ManageUserPage } from "./pages/ManageUser";
 import { AdminDashboardPage } from "./pages/AdminDashboard";
@@ -46,7 +45,6 @@ export function App() {
                                         <Route path="/dashboard/admin/approvals" element={<ProtectedRoute role="admin"><AdminApprovals /></ProtectedRoute>} />
                                         <Route path="/dashboard/instructor/settings" element={<ProtectedRoute role="instructor"><Settings /></ProtectedRoute>} />
                                         <Route path="/dashboard/instructor/earnings" element={<ProtectedRoute role="instructor"><Earnings /></ProtectedRoute>} />
-                                        <Route path="/dashboard/instructor/uploads" element={<ProtectedRoute role="instructor"><MyUploads /></ProtectedRoute>} />
                                         <Route path="/dashboard/student/exams" element={<ProtectedRoute role="student"><MyExams /></ProtectedRoute>} />
                                         <Route path="/dashboard/student/settings" element={<ProtectedRoute role="student"><Settings /></ProtectedRoute>} />
                                         <Route path="/dashboard/admin/settings" element={<ProtectedRoute role="admin"><Settings /></ProtectedRoute>} />

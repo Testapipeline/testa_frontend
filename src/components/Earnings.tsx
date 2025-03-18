@@ -36,35 +36,6 @@ export const Earnings = () => {
               Withdraw Earnings
             </button>
           </div>
-          <h2 className="mt-8 text-lg font-medium text-gray-900">Earnings List</h2>
-          <div className="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
-            <ul className="divide-y divide-gray-200">
-              <li className="bg-gray-50 px-4 py-2 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-500">Course Name</p>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                    <p className="text-sm font-medium text-gray-500">Price</p>
-                  </div>
-                </div>
-              </li>
-              {earnings.map((earning) => (
-                  <li key={earning.id}>
-                    <div className="px-4 py-4 sm:px-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-blue-600 truncate">{earning.course}</p>
-                        </div>
-                        <div className="ml-4 flex-shrink-0">
-                          <p className="text-sm font-medium text-gray-900">KSH {earning.price}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </DashboardLayout>
   );

@@ -63,8 +63,8 @@ export const ExamUploadForm: React.FC = () => {
       return;
     }
     const data = new FormData();
-    data.append("author", user?.name || ""); // Use the author's name from AuthContext
-    data.append("name", formData.name); // Append the name to the form data
+    data.append("author", user?.name || "");
+    data.append("name", formData.name);
     data.append("department", formData.department);
     data.append("course", formData.course);
     data.append("level", formData.level);
@@ -78,10 +78,10 @@ export const ExamUploadForm: React.FC = () => {
     try {
       await uploadExam(data);
       setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 3000); // Hide popup after 3 seconds
-      // Reset form or show success message
+      setTimeout(() => setShowPopup(false), 3000);
+
     } catch (error) {
-      // Handle error
+        console.error(error);
     }
   };
 

@@ -28,10 +28,6 @@ export const DashboardSidebar = () => {
     icon: Upload,
     path: "/dashboard/instructor/upload"
   }, {
-    name: "My Uploads",
-    icon: FileText,
-    path: "/dashboard/instructor/uploads"
-  }, {
     name: "Earnings",
     icon: DollarSign,
     path: "/dashboard/instructor/earnings"
