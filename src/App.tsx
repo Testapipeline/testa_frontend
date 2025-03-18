@@ -19,7 +19,7 @@ import { Settings } from "./components/Settings";
 import { Earnings } from "./components/Earnings";
 import { MyUploads } from "./components/MyUploads";
 import { MyExams } from "./components/MyExams";
-import { ManageUser } from "./pages/ManageUser";
+import { ManageUserPage } from "./pages/ManageUser";
 
 export function App() {
     const handleExamUpload = async (data: FormData) => {
@@ -52,7 +52,7 @@ export function App() {
                                     <Route path="/dashboard/student/exams" element={<ProtectedRoute role="student"><MyExams /></ProtectedRoute>} />
                                     <Route path="/dashboard/student/settings" element={<ProtectedRoute role="student"><Settings /></ProtectedRoute>} />
                                     <Route path="/dashboard/admin/settings" element={<ProtectedRoute role="admin"><Settings /></ProtectedRoute>} />
-                                    <Route path="/dashboard/admin/users" element={<ProtectedRoute role="admin"><ManageUser /></ProtectedRoute>} />
+                                    <Route path="/dashboard/admin/users" element={<ProtectedRoute role="admin"><ManageUserPage /></ProtectedRoute>} />
                                 </Routes>
                             </div>
                             <Footer />
