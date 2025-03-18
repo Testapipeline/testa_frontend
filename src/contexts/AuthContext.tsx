@@ -12,6 +12,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   signup: (data: { name: string; email: string; password: string; role: string }) => Promise<void>;
   logout: () => void;
+  deleteUser: () => Promise<void>;
   isLoading: boolean;
 };
 
@@ -22,7 +23,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user data on refresh
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -92,8 +92,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const deleteUser = async () => {
+    if (!user) return;
+    try {
+      const response = await fetch(`http://localhost:5000/testa/api/users/deleteUser/${user.role}/${user.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete account");
+      }
+
+      localStorage.removeItem("user");
+      setUser(null);
+    } catch (error) {
+      throw new Error("Failed to delete account");
+    }
+  };
+
   return (
-      <AuthContext.Provider value={{ user, login, signup, logout, isLoading }}>
+      <AuthContext.Provider value={{ user, login, signup, logout, deleteUser, isLoading }}>
         {children}
       </AuthContext.Provider>
   );

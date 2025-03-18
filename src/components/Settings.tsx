@@ -1,12 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import { DashboardLayout } from "./DashboardLayout.tsx";
 
 export const Settings = () => {
     const navigate = useNavigate();
+    const { deleteUser } = useAuth();
 
     const handleDeleteAccount = async () => {
         if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
             try {
+                await deleteUser();
                 navigate("/");
             } catch (error) {
                 console.error("Failed to delete account:", error);
