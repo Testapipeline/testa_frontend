@@ -73,15 +73,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify(data),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Signup failed");
+        throw new Error(result.error || "Signup failed");
       }
 
-      const result = await response.json();
       localStorage.setItem("user", JSON.stringify(result.user));
       setUser(result.user);
-    } catch (error) {
-      throw new Error("Signup failed");
+    } catch (error: any) {
+      throw new Error(error.message);
     } finally {
       setIsLoading(false);
     }

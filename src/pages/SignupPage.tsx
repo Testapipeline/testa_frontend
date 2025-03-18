@@ -30,8 +30,8 @@ export const SignupPage = () => {
     try {
       await signup(formData);
       navigate(`/dashboard/${formData.role}`);
-    } catch (err) {
-      setError("Signup failed");
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
