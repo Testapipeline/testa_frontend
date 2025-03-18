@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { Upload, X } from "lucide-react";
 import { DashboardLayout } from "./DashboardLayout";
+import { useDepartments } from "../contexts/DepartmentContext";
+import { useCourses } from "../contexts/CourseContext";
+import { useExam } from "../contexts/ExamContext";
+import { useAuth } from "../contexts/AuthContext";
 
-type ExamUploadFormProps = {
-  onSubmit: (data: FormData) => Promise<void>;
-};
+export const ExamUploadForm: React.FC = () => {
+  const { departments, isLoading: isLoadingDepartments, error: errorDepartments } = useDepartments();
+  const { courses, isLoading: isLoadingCourses, error: errorCourses } = useCourses();
+  const { uploadExam, isLoading: isUploading, error: uploadError } = useExam();
+  const { user } = useAuth();
 
-export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
+    name: "", // New state for name
     department: "",
     course: "",
     level: "",
@@ -22,22 +28,7 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
   const [topicInput, setTopicInput] = useState("");
   const [showPopup, setShowPopup] = useState(false);
 
-  const departments = [
-    "Agriculture and Aquaculture",
-    "Applied Sciences",
-    "Building and Civil Engineering",
-    "Business and Management",
-    "Computing and IT",
-    "Education",
-    "Engineering",
-    "Health Sciences",
-    "Humanities and Social Sciences",
-    "Law",
-    "Natural Sciences",
-  ];
-
-  const courses = ["Course 1", "Course 2", "Course 3"];
-  const levels = ["Level 1", "Level 2", "Level 3"];
+  const levels = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6"];
   const units = ["Basic Unit", "Core Unit", "Common Unit"];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,17 +63,20 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
       return;
     }
     const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value !== null) {
-        if (typeof value === "object") {
-          data.append(key, JSON.stringify(value));
-        } else {
-          data.append(key, value.toString());
-        }
-      }
-    });
+    data.append("author", user?.name || ""); // Use the author's name from AuthContext
+    data.append("name", formData.name); // Append the name to the form data
+    data.append("department", formData.department);
+    data.append("course", formData.course);
+    data.append("level", formData.level);
+    data.append("unitName", formData.unitName);
+    data.append("description", formData.description);
+    data.append("price", formData.price.toString());
+    data.append("topics", JSON.stringify(formData.topics));
+    if (formData.file) {
+      data.append("file", formData.file);
+    }
     try {
-      await onSubmit(data);
+      await uploadExam(data);
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000); // Hide popup after 3 seconds
       // Reset form or show success message
@@ -112,11 +106,33 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
     setFormData({ ...formData, topics: formData.topics.filter(t => t !== topic) });
   };
 
+  if (isLoadingDepartments || isLoadingCourses) {
+    return <div>Loading...</div>;
+  }
+
+  if (errorDepartments) {
+    return <div>Error: {errorDepartments}</div>;
+  }
+
+  if (errorCourses) {
+    return <div>Error: {errorCourses}</div>;
+  }
+
   return (
       <DashboardLayout>
         <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-20 mb-5">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Upload Examination</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="w-3/4 mx-auto">
+              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <input
+                  type="text"
+                  required
+                  className="mt-1 block w-full h-12 rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-gray-900 pl-3"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+            </div>
             <div className="w-3/4 mx-auto">
               <label className="block text-sm font-medium text-gray-700">Department</label>
               <select
@@ -127,8 +143,8 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
               >
                 <option value="">Select Department</option>
                 {departments.map((dept) => (
-                    <option key={dept} value={dept}>
-                      {dept}
+                    <option key={dept._id} value={dept.name}>
+                      {dept.name}
                     </option>
                 ))}
               </select>
@@ -143,8 +159,8 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
               >
                 <option value="">Select Course</option>
                 {courses.map((course) => (
-                    <option key={course} value={course}>
-                      {course}
+                    <option key={course._id} value={course.name}>
+                      {course.name}
                     </option>
                 ))}
               </select>
@@ -282,8 +298,9 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
               <button
                   type="submit"
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  disabled={isUploading}
               >
-                Upload Examination
+                {isUploading ? "Uploading..." : "Upload Examination"}
               </button>
             </div>
           </form>
@@ -292,6 +309,7 @@ export const ExamUploadForm: React.FC<ExamUploadFormProps> = ({ onSubmit }) => {
                 Successfully Uploaded! It's Under the Admin Approval Process.
               </div>
           )}
+          {uploadError && <p className="mt-2 text-sm text-red-600">{uploadError}</p>}
         </div>
       </DashboardLayout>
   );
