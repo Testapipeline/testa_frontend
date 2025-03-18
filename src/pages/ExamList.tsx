@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ExamFilters } from "../components/ExamFilters";
 import { ExamCard } from "../components/ExamCard";
+import { useDepartments } from "../contexts/DepartmentContext";
+import { useCourses } from "../contexts/CourseContext";
 
 export const ExamList = () => {
   const [searchParams] = useSearchParams();
+  const { isLoading: isLoadingDepartments, error: errorDepartments } = useDepartments();
+  const { isLoading: isLoadingCourses, error: errorCourses } = useCourses();
   const [filters, setFilters] = useState({
     department: searchParams.get("department") || "All Departments",
     unit: "All Units",
     course: "All Courses",
     level: "All Levels"
   });
+
+  useEffect(() => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      department: searchParams.get("department") || "All Departments"
+    }));
+  }, [searchParams]);
 
   // Mock exam data - would come from API
   const exams = [
@@ -97,6 +108,18 @@ export const ExamList = () => {
       ...newFilters
     });
   };
+
+  if (isLoadingDepartments || isLoadingCourses) {
+    return <div>Loading...</div>;
+  }
+
+  if (errorDepartments) {
+    return <div>Error: {errorDepartments}</div>;
+  }
+
+  if (errorCourses) {
+    return <div>Error: {errorCourses}</div>;
+  }
 
   return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 mb-5">

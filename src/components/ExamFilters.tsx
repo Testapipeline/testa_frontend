@@ -1,4 +1,6 @@
 import React from "react";
+import { useDepartments } from "../contexts/DepartmentContext";
+import { useCourses } from "../contexts/CourseContext";
 
 type ExamFiltersProps = {
     onFilterChange: (filters: any) => void;
@@ -13,12 +15,24 @@ export const ExamFilters: React.FC<ExamFiltersProps> = ({
                                                             selectedDepartment,
                                                             selectedUnit,
                                                             selectedCourse,
-                                                            selectedLevel
+                                                            selectedLevel,
                                                         }) => {
-    const departments = ["All Departments", "Agriculture and Aquaculture", "Applied Sciences", "Building and Civil Engineering", "Business Studies", "Computer Studies/ICT", "Electrical and Electronic Engineering", "Health Science", "Hospitality", "Mechanical and Automotive Engineering", "Social Work", "Textile, Fashion Design and Cosmetology"];
+    const { departments, isLoading: isLoadingDepartments, error: errorDepartments } = useDepartments();
+    const { courses, isLoading: isLoadingCourses, error: errorCourses } = useCourses();
     const units = ["All Units", "Basic Unit", "Common Unit", "Core Unit"];
-    const courses = ["All Courses", "Course 1", "Course 2", "Course 3"]; // Add actual course names here
-    const levels = ["All Levels", "Level 1", "Level 2", "Level 3"]; // Add actual level names here
+    const levels = ["All Levels", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6"];
+
+    if (isLoadingDepartments || isLoadingCourses) {
+        return <div>Loading...</div>;
+    }
+
+    if (errorDepartments) {
+        return <div>Error: {errorDepartments}</div>;
+    }
+
+    if (errorCourses) {
+        return <div>Error: {errorCourses}</div>;
+    }
 
     return (
         <div className="bg-white p-4 rounded-lg shadow mb-6">
@@ -31,11 +45,12 @@ export const ExamFilters: React.FC<ExamFiltersProps> = ({
                         id="department"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         value={selectedDepartment}
-                        onChange={e => onFilterChange({ department: e.target.value })}
+                        onChange={(e) => onFilterChange({ department: e.target.value })}
                     >
-                        {departments.map(dept => (
-                            <option key={dept} value={dept}>
-                                {dept}
+                        <option value="All Departments">All Departments</option>
+                        {departments.map((dept) => (
+                            <option key={dept._id} value={dept.name}>
+                                {dept.name}
                             </option>
                         ))}
                     </select>
@@ -48,9 +63,9 @@ export const ExamFilters: React.FC<ExamFiltersProps> = ({
                         id="unit"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         value={selectedUnit}
-                        onChange={e => onFilterChange({ unit: e.target.value })}
+                        onChange={(e) => onFilterChange({ unit: e.target.value })}
                     >
-                        {units.map(unit => (
+                        {units.map((unit) => (
                             <option key={unit} value={unit}>
                                 {unit}
                             </option>
@@ -65,11 +80,12 @@ export const ExamFilters: React.FC<ExamFiltersProps> = ({
                         id="course"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         value={selectedCourse}
-                        onChange={e => onFilterChange({ course: e.target.value })}
+                        onChange={(e) => onFilterChange({ course: e.target.value })}
                     >
-                        {courses.map(course => (
-                            <option key={course} value={course}>
-                                {course}
+                        <option value="All Courses">All Courses</option>
+                        {courses.map((course) => (
+                            <option key={course._id} value={course.name}>
+                                {course.name}
                             </option>
                         ))}
                     </select>
@@ -82,9 +98,9 @@ export const ExamFilters: React.FC<ExamFiltersProps> = ({
                         id="level"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         value={selectedLevel}
-                        onChange={e => onFilterChange({ level: e.target.value })}
+                        onChange={(e) => onFilterChange({ level: e.target.value })}
                     >
-                        {levels.map(level => (
+                        {levels.map((level) => (
                             <option key={level} value={level}>
                                 {level}
                             </option>
