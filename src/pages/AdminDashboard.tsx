@@ -1,11 +1,10 @@
 import { DashboardLayout } from "../components/DashboardLayout";
 import { FileText, Users, CheckSquare, UserPlus } from "lucide-react";
+import { InstructorProvider, useInstructors } from "../contexts/InstructorContext";
 
 export const AdminDashboard = () => {
     const approvedExamsCount = 10; // Replace with actual data
-    const approvedUsersCount = 50; // Replace with actual data
     const pendingExamApprovalsCount = 5; // Replace with actual data
-    const pendingUserApprovalsCount = 3; // Replace with actual data
 
     const recentExams = [
         { id: 1, title: "Advanced Programming", status: "Approved", uploadDate: "2023-08-15" },
@@ -13,23 +12,31 @@ export const AdminDashboard = () => {
         { id: 3, title: "Advanced Programming iii", status: "Rejected", uploadDate: "2023-08-15" }
     ];
 
-    const recentUsers = [
-        { id: 1, name: "John Doe", email: "john.doe@example.com", joinDate: "2023-08-15", status: "Approved" },
-        { id: 2, name: "Jane Smith", email: "jane.smith@example.com", joinDate: "2023-08-16", status: "Pending" }
-    ];
+    const { instructors: recentUsers, isLoading, error } = useInstructors();
+
+    const approvedUsersCount = recentUsers.filter(user => user.status === "Approved").length;
+    const pendingUserApprovalsCount = recentUsers.filter(user => user.status === "Pending").length;
 
     const getStatusLabelColor = (status: string) => {
         switch (status) {
             case "Approved":
                 return "bg-green-100 text-green-800";
-            case "Pending":
-                return "bg-orange-100 text-orange-800";
             case "Rejected":
+                return "bg-orange-100 text-orange-800";
+            case "Deleted":
                 return "bg-red-100 text-red-800";
             default:
                 return "bg-gray-100 text-gray-800";
         }
     };
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <DashboardLayout>
@@ -122,14 +129,14 @@ export const AdminDashboard = () => {
                     <div className="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
                         <ul className="divide-y divide-gray-200">
                             {recentUsers.map((user) => (
-                                <li key={user.id}>
+                                <li key={user._id}>
                                     <div className="px-4 py-4 sm:px-6">
                                         <div className="flex items-center justify-between">
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-sm font-medium text-blue-600 truncate">{user.name}</p>
                                                 <p className="text-sm text-gray-500">Email: {user.email}</p>
                                                 <p className="mt-1 text-sm text-gray-500">Status: <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusLabelColor(user.status)}`}>{user.status}</span></p>
-                                                <p className="mt-1 text-sm text-gray-500">Join Date: {user.joinDate}</p>
+                                                <p className="mt-1 text-sm text-gray-500">Join Date: {user.createdDate}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -142,3 +149,9 @@ export const AdminDashboard = () => {
         </DashboardLayout>
     );
 };
+
+export const AdminDashboardPage = () => (
+    <InstructorProvider>
+        <AdminDashboard />
+    </InstructorProvider>
+);

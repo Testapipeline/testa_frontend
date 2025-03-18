@@ -7,7 +7,6 @@ import { SignupPage } from "./pages/SignupPage";
 import { ExamList } from "./pages/ExamList";
 import { StudentDashboard } from "./pages/StudentDashboard";
 import { InstructorDashboard } from "./pages/InstructorDashboard";
-import { AdminDashboard } from "./pages/AdminDashboard";
 import { AdminApprovals } from "./pages/AdminApprovals";
 import { ExamDetails } from "./pages/ExamDetails";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -20,6 +19,7 @@ import { Earnings } from "./components/Earnings";
 import { MyUploads } from "./components/MyUploads";
 import { MyExams } from "./components/MyExams";
 import { ManageUserPage } from "./pages/ManageUser";
+import { AdminDashboardPage } from "./pages/AdminDashboard";
 
 export function App() {
     const handleExamUpload = async (data: FormData) => {
@@ -44,7 +44,6 @@ export function App() {
                                     <Route path="/dashboard/student/*" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
                                     <Route path="/dashboard/instructor/*" element={<ProtectedRoute role="instructor"><InstructorDashboard /></ProtectedRoute>} />
                                     <Route path="/dashboard/instructor/upload" element={<ProtectedRoute role="instructor"><ExamUploadForm onSubmit={handleExamUpload} /></ProtectedRoute>} />
-                                    <Route path="/dashboard/admin/*" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
                                     <Route path="/dashboard/admin/approvals" element={<ProtectedRoute role="admin"><AdminApprovals /></ProtectedRoute>} />
                                     <Route path="/dashboard/instructor/settings" element={<ProtectedRoute role="instructor"><Settings /></ProtectedRoute>} />
                                     <Route path="/dashboard/instructor/earnings" element={<ProtectedRoute role="instructor"><Earnings /></ProtectedRoute>} />
@@ -53,6 +52,7 @@ export function App() {
                                     <Route path="/dashboard/student/settings" element={<ProtectedRoute role="student"><Settings /></ProtectedRoute>} />
                                     <Route path="/dashboard/admin/settings" element={<ProtectedRoute role="admin"><Settings /></ProtectedRoute>} />
                                     <Route path="/dashboard/admin/users" element={<ProtectedRoute role="admin"><ManageUserPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/admin" element={<ProtectedRoute role="admin"><AdminDashboardPage /></ProtectedRoute>} />
                                 </Routes>
                             </div>
                             <Footer />
