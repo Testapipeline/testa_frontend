@@ -22,8 +22,10 @@ type ExamContextType = {
   uploadExam: (data: FormData) => Promise<void>;
   getExams: () => Promise<void>;
   getExamsByAuthor: (authorId: string) => Promise<void>;
+  getApprovedExams: () => Promise<void>;
   approveExams: (examId: string, status: string) => Promise<void>;
   exams: Exam[];
+  approvedExams: Exam[];
   authorExams: Exam[];
   isLoading: boolean;
   error: string | null;
@@ -33,6 +35,7 @@ const ExamContext = createContext<ExamContextType | undefined>(undefined);
 
 export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [exams, setExams] = useState<Exam[]>([]);
+  const [approvedExams, setApprovedExams] = useState<Exam[]>([]);
   const [authorExams, setAuthorExams] = useState<Exam[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,6 +97,27 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const getApprovedExams = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("http://localhost:5000/testa/api/exams/getApprovedExams");
+      if (!response.ok) {
+        throw new Error("Failed to fetch approved exams");
+      }
+      const data: Exam[] = await response.json();
+      const formattedData = data.map((exam: Exam) => ({
+        ...exam,
+        createdDate: new Date(exam.createdDate).toISOString().split('T')[0]
+      }));
+      setApprovedExams(formattedData);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const approveExams = async (examId: string, status: string) => {
     try {
       const response = await fetch(`http://localhost:5000/testa/api/exams/examApproval/${examId}/${status}`);
@@ -118,7 +142,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user]);
 
   return (
-      <ExamContext.Provider value={{ uploadExam, getExams, getExamsByAuthor, approveExams, exams, authorExams, isLoading, error }}>
+      <ExamContext.Provider value={{ uploadExam, getExams, getExamsByAuthor, getApprovedExams, approveExams, exams, approvedExams, authorExams, isLoading, error }}>
         {children}
       </ExamContext.Provider>
   );
