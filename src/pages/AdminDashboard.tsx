@@ -1,18 +1,26 @@
+import { useEffect, useState } from "react";
 import { DashboardLayout } from "../components/DashboardLayout";
 import { FileText, Users, CheckSquare, UserPlus } from "lucide-react";
 import { InstructorProvider, useInstructors } from "../contexts/InstructorContext";
+import { useExam } from "../contexts/ExamContext";
 
 export const AdminDashboard = () => {
-    const approvedExamsCount = 10; // Replace with actual data
-    const pendingExamApprovalsCount = 5; // Replace with actual data
+    const { getExams, exams, isLoading, error } = useExam();
+    const { instructors: recentUsers, isLoading: isUsersLoading, error: usersError } = useInstructors();
 
-    const recentExams = [
-        { id: 1, title: "Advanced Programming", status: "Approved", uploadDate: "2023-08-15" },
-        { id: 2, title: "Data Structures", status: "Pending", uploadDate: "2023-08-16" },
-        { id: 3, title: "Advanced Programming iii", status: "Rejected", uploadDate: "2023-08-15" }
-    ];
+    const [approvedExamsCount, setApprovedExamsCount] = useState(0);
+    const [pendingExamApprovalsCount, setPendingExamApprovalsCount] = useState(0);
 
-    const { instructors: recentUsers, isLoading, error } = useInstructors();
+    useEffect(() => {
+        getExams();
+    }, []);
+
+    useEffect(() => {
+        const approvedExams = exams.filter(exam => exam.status === "Approved").length;
+        const pendingExams = exams.filter(exam => exam.status === "Pending").length;
+        setApprovedExamsCount(approvedExams);
+        setPendingExamApprovalsCount(pendingExams);
+    }, [exams]);
 
     const approvedUsersCount = recentUsers.filter(user => user.status === "Approved").length;
     const pendingUserApprovalsCount = recentUsers.filter(user => user.status === "Pending").length;
@@ -30,12 +38,12 @@ export const AdminDashboard = () => {
         }
     };
 
-    if (isLoading) {
+    if (isLoading || isUsersLoading) {
         return <div>Loading...</div>;
     }
 
-    if (error) {
-        return <div>Error: {error}</div>;
+    if (error || usersError) {
+        return <div>Error: {error || usersError}</div>;
     }
 
     return (
@@ -108,14 +116,14 @@ export const AdminDashboard = () => {
                     <h2 className="text-lg font-medium text-gray-900">Recently Added Exams</h2>
                     <div className="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
                         <ul className="divide-y divide-gray-200">
-                            {recentExams.map((exam) => (
-                                <li key={exam.id}>
+                            {exams.map((exam) => (
+                                <li key={exam._id}>
                                     <div className="px-4 py-4 sm:px-6">
                                         <div className="flex items-center justify-between">
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-blue-600 truncate">{exam.title}</p>
+                                                <p className="text-sm font-medium text-blue-600 truncate">{exam.name}</p>
                                                 <p className="mt-1 text-sm text-gray-500">Status: <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusLabelColor(exam.status)}`}>{exam.status}</span></p>
-                                                <p className="mt-1 text-sm text-gray-500">Upload Date: {exam.uploadDate}</p>
+                                                <p className="mt-1 text-sm text-gray-500">Upload Date: {new Date(exam.createdDate).toLocaleDateString()}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -136,7 +144,7 @@ export const AdminDashboard = () => {
                                                 <p className="text-sm font-medium text-blue-600 truncate">{user.name}</p>
                                                 <p className="text-sm text-gray-500">Email: {user.email}</p>
                                                 <p className="mt-1 text-sm text-gray-500">Status: <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusLabelColor(user.status)}`}>{user.status}</span></p>
-                                                <p className="mt-1 text-sm text-gray-500">Join Date: {user.createdDate}</p>
+                                                <p className="mt-1 text-sm text-gray-500">Join Date: {new Date(user.createdDate).toLocaleDateString()}</p>
                                             </div>
                                         </div>
                                     </div>

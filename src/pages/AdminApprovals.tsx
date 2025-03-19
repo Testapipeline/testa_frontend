@@ -12,7 +12,7 @@ export const AdminApprovals = () => {
   // Add more mock data
   ];
   return <DashboardLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 mb-5">
         <h1 className="text-2xl font-bold text-gray-900">Pending Approvals</h1>
         <div className="mt-8">
           <div className="bg-white shadow overflow-hidden sm:rounded-md">
