@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Layout, FileText, Upload, Users, Settings, DollarSign, CheckSquare } from "lucide-react";
+import { Layout, Upload, Users, Settings, DollarSign, CheckSquare } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 export const DashboardSidebar = () => {
   const {
@@ -10,11 +10,7 @@ export const DashboardSidebar = () => {
     name: "Dashboard",
     icon: Layout,
     path: "/dashboard/student"
-  }, {
-    name: "My Exams",
-    icon: FileText,
-    path: "/dashboard/student/exams"
-  }, {
+  },{
     name: "Settings",
     icon: Settings,
     path: "/dashboard/student/settings"
