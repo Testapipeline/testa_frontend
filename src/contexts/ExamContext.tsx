@@ -22,6 +22,7 @@ type ExamContextType = {
   uploadExam: (data: FormData) => Promise<void>;
   getExams: () => Promise<void>;
   getExamsByAuthor: (authorId: string) => Promise<void>;
+  approveExams: (examId: string, status: string) => Promise<void>;
   exams: Exam[];
   authorExams: Exam[];
   isLoading: boolean;
@@ -64,7 +65,11 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error("Failed to fetch exams");
       }
       const data: Exam[] = await response.json();
-      setExams(data);
+      const formattedData = data.map((exam: Exam) => ({
+        ...exam,
+        createdDate: new Date(exam.createdDate).toISOString().split('T')[0]
+      }));
+      setExams(formattedData);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -89,6 +94,22 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const approveExams = async (examId: string, status: string) => {
+    try {
+      const response = await fetch(`http://localhost:5000/testa/api/exams/examApproval/${examId}/${status}`);
+      if (!response.ok) {
+        throw new Error("Failed to update exam status");
+      }
+      setExams(prevExams =>
+          prevExams.map(exam =>
+              exam._id === examId ? { ...exam, status } : exam
+          )
+      );
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   useEffect(() => {
     getExams();
     if (user) {
@@ -97,7 +118,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user]);
 
   return (
-      <ExamContext.Provider value={{ uploadExam, getExams, getExamsByAuthor, exams, authorExams, isLoading, error }}>
+      <ExamContext.Provider value={{ uploadExam, getExams, getExamsByAuthor, approveExams, exams, authorExams, isLoading, error }}>
         {children}
       </ExamContext.Provider>
   );
