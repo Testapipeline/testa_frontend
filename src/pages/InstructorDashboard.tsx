@@ -5,7 +5,7 @@ import { useExam } from "../contexts/ExamContext";
 
 export const InstructorDashboard = () => {
   const navigate = useNavigate();
-  const { exams, isLoading, error } = useExam();
+  const { authorExams, isLoading, error } = useExam();
 
   const handleUploadClick = () => {
     navigate("/dashboard/instructor/upload");
@@ -46,7 +46,7 @@ export const InstructorDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">Total Uploads</dt>
-                      <dd className="text-lg font-medium text-gray-900">{exams.length}</dd>
+                      <dd className="text-lg font-medium text-gray-900">{authorExams.length}</dd>
                     </dl>
                   </div>
                 </div>
@@ -61,7 +61,7 @@ export const InstructorDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">Pending Approval</dt>
-                      <dd className="text-lg font-medium text-gray-900">{exams.filter(exam => exam.status === "Pending").length}</dd>
+                      <dd className="text-lg font-medium text-gray-900">{authorExams.filter(exam => exam.status === "Pending").length}</dd>
                     </dl>
                   </div>
                 </div>
@@ -76,7 +76,7 @@ export const InstructorDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">Total Earnings</dt>
-                      <dd className="text-lg font-medium text-gray-900">KSH {exams.reduce((total, exam) => total + exam.price, 0)}</dd>
+                      <dd className="text-lg font-medium text-gray-900">KSH {authorExams.reduce((total, exam) => total + exam.price, 0)}</dd>
                     </dl>
                   </div>
                 </div>
@@ -95,7 +95,7 @@ export const InstructorDashboard = () => {
             </div>
             <div className="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
               <ul className="divide-y divide-gray-200">
-                {exams.map((upload) => (
+                {authorExams.map((upload) => (
                     <li key={upload._id}>
                       <div className="px-4 py-4 sm:px-6">
                         <div className="flex items-center justify-between">

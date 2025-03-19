@@ -13,7 +13,7 @@ export const ExamUploadForm: React.FC = () => {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    name: "", // New state for name
+    name: "",
     department: "",
     course: "",
     level: "",
@@ -63,6 +63,7 @@ export const ExamUploadForm: React.FC = () => {
       return;
     }
     const data = new FormData();
+    data.append("authorId", user?.id || "");
     data.append("author", user?.name || "");
     data.append("name", formData.name);
     data.append("department", formData.department);
