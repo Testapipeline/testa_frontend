@@ -21,7 +21,9 @@ export const ExamCard: React.FC<ExamCardProps> = ({ exam }) => {
       <Link to={`/exam/${exam._id}`} className="block transform transition-transform hover:scale-105">
         <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 overflow-hidden">
           <div className="p-6">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">{exam.name}</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2 truncate">
+              {exam.name}
+            </h3>
             <div className="space-y-2 mb-4">
               <div className="flex items-center text-sm text-gray-500">
                 <BookOpen className="h-4 w-4 mr-2 text-blue-600" />

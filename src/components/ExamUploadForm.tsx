@@ -110,8 +110,8 @@ export const ExamUploadForm: React.FC = () => {
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
-    if (name.length === 50) {
-      setNameError("Maximum 60 characters allowed.");
+    if (name.length === 100) {
+      setNameError("Maximum 100 characters allowed.");
     } else {
       setNameError("");
       setFormData({ ...formData, name });
@@ -143,7 +143,7 @@ export const ExamUploadForm: React.FC = () => {
                   className="mt-1 block w-full h-12 rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-gray-900 pl-3"
                   value={formData.name}
                   onChange={handleNameChange}
-                  maxLength={50}
+                  maxLength={100}
               />
               {nameError && <p className="mt-2 text-sm text-red-600">{nameError}</p>}
             </div>
