@@ -1,5 +1,5 @@
 import { DashboardLayout } from "../components/DashboardLayout";
-import { FileText, DollarSign, Upload } from "lucide-react";
+import { FileText, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useExam } from "../contexts/ExamContext";
 
@@ -62,21 +62,6 @@ export const InstructorDashboard = () => {
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">Pending Approval</dt>
                       <dd className="text-lg font-medium text-gray-900">{authorExams.filter(exam => exam.status === "Pending").length}</dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <DollarSign className="h-6 w-6 text-gray-400" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Total Earnings</dt>
-                      <dd className="text-lg font-medium text-gray-900">KSH {authorExams.reduce((total, exam) => total + exam.price, 0)}</dd>
                     </dl>
                   </div>
                 </div>
