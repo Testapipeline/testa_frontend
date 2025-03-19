@@ -27,6 +27,7 @@ export const ExamUploadForm: React.FC = () => {
   const [fileError, setFileError] = useState("");
   const [topicInput, setTopicInput] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [nameError, setNameError] = useState("");
 
   const levels = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6"];
   const units = ["Basic Unit", "Core Unit", "Common Unit"];
@@ -82,7 +83,7 @@ export const ExamUploadForm: React.FC = () => {
       setTimeout(() => setShowPopup(false), 3000);
 
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   };
 
@@ -105,6 +106,16 @@ export const ExamUploadForm: React.FC = () => {
 
   const handleRemoveTopic = (topic: string) => {
     setFormData({ ...formData, topics: formData.topics.filter(t => t !== topic) });
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    if (name.length === 50) {
+      setNameError("Maximum 60 characters allowed.");
+    } else {
+      setNameError("");
+      setFormData({ ...formData, name });
+    }
   };
 
   if (isLoadingDepartments || isLoadingCourses) {
@@ -131,8 +142,10 @@ export const ExamUploadForm: React.FC = () => {
                   required
                   className="mt-1 block w-full h-12 rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-gray-900 pl-3"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={handleNameChange}
+                  maxLength={50}
               />
+              {nameError && <p className="mt-2 text-sm text-red-600">{nameError}</p>}
             </div>
             <div className="w-3/4 mx-auto">
               <label className="block text-sm font-medium text-gray-700">Department</label>
