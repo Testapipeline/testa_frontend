@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 
 type Exam = {
@@ -23,6 +23,7 @@ type ExamContextType = {
   getExams: () => Promise<void>;
   getExamsByAuthor: (authorId: string) => Promise<void>;
   getApprovedExams: () => Promise<void>;
+  getApprovedExamByExamId: (examId: string) => Promise<Exam | null>;
   approveExams: (examId: string, status: string) => Promise<void>;
   exams: Exam[];
   approvedExams: Exam[];
@@ -118,6 +119,27 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const getApprovedExamByExamId = useCallback(async (examId: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://localhost:5000/testa/api/exams/getApprovedExamByExamId/${examId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch exam details");
+      }
+      const data: Exam = await response.json();
+      return {
+        ...data,
+        createdDate: new Date(data.createdDate).toISOString().split('T')[0]
+      };
+    } catch (err: any) {
+      setError(err.message);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const approveExams = async (examId: string, status: string) => {
     try {
       const response = await fetch(`http://localhost:5000/testa/api/exams/examApproval/${examId}/${status}`);
@@ -142,7 +164,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user]);
 
   return (
-      <ExamContext.Provider value={{ uploadExam, getExams, getExamsByAuthor, getApprovedExams, approveExams, exams, approvedExams, authorExams, isLoading, error }}>
+      <ExamContext.Provider value={{ uploadExam, getExams, getExamsByAuthor, getApprovedExams, getApprovedExamByExamId, approveExams, exams, approvedExams, authorExams, isLoading, error }}>
         {children}
       </ExamContext.Provider>
   );

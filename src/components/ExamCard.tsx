@@ -1,6 +1,6 @@
 import React from "react";
 import { FileText, Clock, BookOpen, Layers } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type ExamCardProps = {
   exam: {
@@ -17,8 +17,15 @@ type ExamCardProps = {
 };
 
 export const ExamCard: React.FC<ExamCardProps> = ({ exam }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const encodedId = btoa(exam._id);
+    navigate(`/exam/${encodedId}`);
+  };
+
   return (
-      <Link to={`/exam/${exam._id}`} className="block transform transition-transform hover:scale-105">
+      <div onClick={handleClick} className="block transform transition-transform hover:scale-105 cursor-pointer">
         <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 overflow-hidden">
           <div className="p-6">
             <h3 className="text-2xl font-bold text-gray-900 mb-2 truncate">
@@ -52,6 +59,6 @@ export const ExamCard: React.FC<ExamCardProps> = ({ exam }) => {
             </div>
           </div>
         </div>
-      </Link>
+      </div>
   );
 };

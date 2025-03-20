@@ -1,19 +1,23 @@
+import image1 from "../assets/2.jpg";
+import image2 from "../assets/3.jpg";
+import image3 from "../assets/4.jpg";
+
 export const Testimonials = () => {
   const testimonials = [{
     content: "TESTA has been instrumental in my exam preparation. The quality of content is exceptional.",
     author: "Sarah Johnson",
     role: "Computer Science Student",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+    image: image1
   }, {
     content: "As an instructor, I'm impressed by the platform's reach and the impact it has on students.",
     author: "Michael Chen",
     role: "Engineering Instructor",
-    image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+    image: image2
   }, {
     content: "The variety of exam papers available helped me understand different question patterns.",
     author: "Emily Williams",
     role: "Business Studies Student",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+    image: image3
   }];
   return <div className="bg-gray-50 py-16 sm:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
