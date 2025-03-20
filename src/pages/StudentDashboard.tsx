@@ -2,32 +2,33 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "../components/DashboardLayout";
 import { Download } from "lucide-react";
+import { useExam } from "../contexts/ExamContext";
+import { useAuth } from "../contexts/AuthContext";
 
 interface Exam {
-  id: number;
-  title: string;
+  _id: string;
+  name: string;
   department: string;
 }
 
 export const StudentDashboard = () => {
   const [boughtExams, setBoughtExams] = useState<Exam[]>([]);
+  const { getPurchasedExamsById } = useExam();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch bought exams from the backend or local storage
     const fetchBoughtExams = async () => {
-      // Simulate fetching data
-      const exams: Exam[] = [
-        { id: 1, title: "Advanced Mathematics", department: "Mathematics" },
-        { id: 2, title: "Physics", department: "Science" }
-      ];
-      setBoughtExams(exams);
+      if (user) {
+        const exams = await getPurchasedExamsById(user.id);
+        setBoughtExams(exams);
+      }
     };
 
     fetchBoughtExams();
-  }, []);
+  }, [user, getPurchasedExamsById]);
 
-  const handleViewExam = (id: number) => {
+  const handleViewExam = (id: string) => {
     navigate(`/exam/${id}`);
   };
 
@@ -45,7 +46,7 @@ export const StudentDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">Purchased Exams</dt>
-                      <dd className="text-lg font-medium text-gray-900">12</dd>
+                      <dd className="text-lg font-medium text-gray-900">{boughtExams.length}</dd>
                     </dl>
                   </div>
                 </div>
@@ -57,16 +58,16 @@ export const StudentDashboard = () => {
             <div className="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
               <ul className="divide-y divide-gray-200">
                 {boughtExams.map(exam => (
-                    <li key={exam.id}>
+                    <li key={exam._id}>
                       <div className="px-4 py-4 sm:px-6">
                         <div className="flex items-center justify-between">
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-blue-600 truncate">{exam.title}</p>
+                            <p className="text-sm font-medium text-blue-600 truncate">{exam.name}</p>
                             <p className="mt-1 text-sm text-gray-500">{exam.department}</p>
                           </div>
                           <div className="ml-4 flex-shrink-0">
                             <button
-                                onClick={() => handleViewExam(exam.id)}
+                                onClick={() => handleViewExam(exam._id)}
                                 className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700"
                             >
                               View Exam

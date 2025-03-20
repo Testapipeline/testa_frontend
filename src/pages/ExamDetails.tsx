@@ -61,7 +61,7 @@ export const ExamDetails = () => {
               <div>
                 <h2 className="text-xl font-semibold mb-4">Instructor</h2>
                 <div className="flex items-center">
-                  <ShieldUser className="h-12 w-12 text-gray-500" />
+                  <ShieldUser className="h-12 w-12 text-orange-400" />
                   <div className="ml-4">
                     <div className="text-lg font-medium">{examDetails.author}</div>
                   </div>

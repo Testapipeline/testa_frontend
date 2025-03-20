@@ -25,6 +25,7 @@ type ExamContextType = {
   getApprovedExams: () => Promise<void>;
   getApprovedExamByExamId: (examId: string) => Promise<Exam | null>;
   approveExams: (examId: string, status: string) => Promise<void>;
+  getPurchasedExamsById: (userId: string) => Promise<Exam[]>;
   exams: Exam[];
   approvedExams: Exam[];
   authorExams: Exam[];
@@ -156,6 +157,28 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const getPurchasedExamsById = useCallback(async (userId: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://localhost:5000/testa/api/exams/getPurchasedExams/${userId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch purchased exams");
+      }
+      const data: Exam[] = await response.json();
+      const formattedData = data.map((exam: Exam) => ({
+        ...exam,
+        createdDate: new Date(exam.createdDate).toISOString().split('T')[0]
+      }));
+      return formattedData;
+    } catch (err: any) {
+      setError(err.message);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     getExams();
     if (user) {
@@ -164,7 +187,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user]);
 
   return (
-      <ExamContext.Provider value={{ uploadExam, getExams, getExamsByAuthor, getApprovedExams, getApprovedExamByExamId, approveExams, exams, approvedExams, authorExams, isLoading, error }}>
+      <ExamContext.Provider value={{ uploadExam, getExams, getExamsByAuthor, getApprovedExams, getApprovedExamByExamId, approveExams, getPurchasedExamsById, exams, approvedExams, authorExams, isLoading, error }}>
         {children}
       </ExamContext.Provider>
   );
