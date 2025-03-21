@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "../components/DashboardLayout";
-import {Download, NotepadText} from "lucide-react";
+import { Download, NotepadText } from "lucide-react";
 import { useExam } from "../contexts/ExamContext";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -9,13 +8,14 @@ interface Exam {
   _id: string;
   name: string;
   department: string;
+  filePath: string;
 }
 
 export const StudentDashboard = () => {
   const [boughtExams, setBoughtExams] = useState<Exam[]>([]);
+  const [selectedExam] = useState<Exam | null>(null);
   const { getPurchasedExamsById } = useExam();
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBoughtExams = async () => {
@@ -28,8 +28,8 @@ export const StudentDashboard = () => {
     fetchBoughtExams();
   }, [user, getPurchasedExamsById]);
 
-  const handleViewExam = (id: string) => {
-    navigate(`/exam/${id}`);
+  const handleViewExam = (exam: Exam) => {
+    window.open(exam.filePath, '_blank');
   };
 
   return (
@@ -65,14 +65,14 @@ export const StudentDashboard = () => {
                             <p className="text-sm font-medium text-blue-600 truncate flex items-center">
                               <NotepadText className="h-9 w-9 text-green-500 mr-2" />
                               <span className="flex flex-col">
-                                <span>{exam.name}</span>
-                                <span className="text-sm text-gray-500">{exam.department}</span>
-                              </span>
+                            <span>{exam.name}</span>
+                            <span className="text-sm text-gray-500">{exam.department}</span>
+                          </span>
                             </p>
                           </div>
                           <div className="ml-4 flex-shrink-0">
                             <button
-                                onClick={() => handleViewExam(exam._id)}
+                                onClick={() => handleViewExam(exam)}
                                 className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700"
                             >
                               View Exam
@@ -85,6 +85,20 @@ export const StudentDashboard = () => {
               </ul>
             </div>
           </div>
+          {selectedExam && (
+              <div className="mt-10">
+                <h2 className="text-2xl font-bold text-gray-900">Exam PDF</h2>
+                <div className="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
+                  <iframe
+                      src={selectedExam.filePath}  // Use the URL returned from Cloudinary
+                      width="100%"
+                      height="600px"
+                      title="Exam PDF"
+                      style={{ pointerEvents: "none" }}  // Prevent right-click actions
+                  />
+                </div>
+              </div>
+          )}
         </div>
       </DashboardLayout>
   );
