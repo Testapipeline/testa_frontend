@@ -13,6 +13,8 @@ type CourseContextType = {
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const CourseProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +23,7 @@ export const CourseProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("http://localhost:5000/testa/api/exams/getCourses");
+        const response = await fetch(`${API_URL}/exams/getCourses`);
         if (!response.ok) {
           throw new Error("Failed to fetch courses");
         }

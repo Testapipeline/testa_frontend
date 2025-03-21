@@ -35,6 +35,8 @@ type ExamContextType = {
 
 const ExamContext = createContext<ExamContextType | undefined>(undefined);
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [exams, setExams] = useState<Exam[]>([]);
   const [approvedExams, setApprovedExams] = useState<Exam[]>([]);
@@ -47,7 +49,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:5000/testa/api/exams/upload", {
+      const response = await fetch(`${API_URL}/exams/upload`, {
         method: "POST",
         body: data,
       });
@@ -65,7 +67,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:5000/testa/api/exams/getExams");
+      const response = await fetch(`${API_URL}/exams/getExams`);
       if (!response.ok) {
         throw new Error("Failed to fetch exams");
       }
@@ -86,7 +88,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:5000/testa/api/exams/getExamsByAuthor/${authorId}`);
+      const response = await fetch(`${API_URL}/exams/getExamsByAuthor/${authorId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch exams by author");
       }
@@ -103,7 +105,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:5000/testa/api/exams/getApprovedExams");
+      const response = await fetch(`${API_URL}/exams/getApprovedExams`);
       if (!response.ok) {
         throw new Error("Failed to fetch approved exams");
       }
@@ -124,7 +126,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:5000/testa/api/exams/getApprovedExamByExamId/${examId}`);
+      const response = await fetch(`${API_URL}/exams/getApprovedExamByExamId/${examId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch exam details");
       }
@@ -143,7 +145,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const approveExams = async (examId: string, status: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/testa/api/exams/examApproval/${examId}/${status}`);
+      const response = await fetch(`${API_URL}/exams/examApproval/${examId}/${status}`);
       if (!response.ok) {
         throw new Error("Failed to update exam status");
       }
@@ -161,7 +163,7 @@ export const ExamProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:5000/testa/api/exams/getPurchasedExams/${userId}`);
+      const response = await fetch(`${API_URL}/exams/getPurchasedExams/${userId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch purchased exams");
       }

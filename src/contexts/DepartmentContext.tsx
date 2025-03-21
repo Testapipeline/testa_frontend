@@ -13,6 +13,8 @@ type DepartmentContextType = {
 
 const DepartmentContext = createContext<DepartmentContextType | undefined>(undefined);
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const DepartmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +23,7 @@ export const DepartmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await fetch("http://localhost:5000/testa/api/exams/getDepartments");
+        const response = await fetch(`${API_URL}/exams/getDepartments`);
         if (!response.ok) {
           throw new Error("Failed to fetch departments");
         }

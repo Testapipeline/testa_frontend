@@ -18,6 +18,8 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/testa/api/users/login", {
+      const response = await fetch(`${API_URL}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signup = async (data: { name: string; email: string; password: string; role: string }) => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/testa/api/users/register", {
+      const response = await fetch(`${API_URL}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const deleteUser = async () => {
     if (!user) return;
     try {
-      const response = await fetch(`http://localhost:5000/testa/api/users/deleteUser/${user.role}/${user.id}`, {
+      const response = await fetch(`${API_URL}/users/deleteUser/${user.role}/${user.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

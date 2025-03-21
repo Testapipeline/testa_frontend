@@ -18,6 +18,8 @@ type InstructorContextType = {
 
 const InstructorContext = createContext<InstructorContextType | undefined>(undefined);
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const InstructorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [instructors, setInstructors] = useState<Instructor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +28,7 @@ export const InstructorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     const fetchInstructors = async () => {
       try {
-        const response = await fetch("http://localhost:5000/testa/api/users/getInstructors");
+        const response = await fetch(`${API_URL}/users/getInstructors`);
         if (!response.ok) {
           throw new Error("Failed to fetch instructors");
         }
@@ -48,7 +50,7 @@ export const InstructorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const updateUserStatus = async (userId: string, status: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/testa/api/users/userApproval/${userId}/${status}`);
+      const response = await fetch(`${API_URL}/users/userApproval/${userId}/${status}`);
       if (!response.ok) {
         throw new Error("Failed to update user status");
       }
