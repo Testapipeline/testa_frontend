@@ -165,7 +165,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const verifyOTP = async (email: string, code: string): Promise<string> => {
     try {
-      const response = await fetch(`http://localhost:5000/testa/api/users/verifyOTP/${email}/${code}`, {
+      const response = await fetch(`${API_URL}/users/verifyOTP/${email}/${code}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
