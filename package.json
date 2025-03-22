@@ -15,6 +15,7 @@
     "axios": "^1.8.3",
     "dotenv": "^16.4.7",
     "lucide-react": "latest",
+    "nodemailer": "^6.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "latest",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.18",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@typescript-eslint/eslint-plugin": "^5.54.0",

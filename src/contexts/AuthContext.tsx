@@ -13,6 +13,9 @@ type AuthContextType = {
   signup: (data: { name: string; email: string; password: string; role: string }) => Promise<void>;
   logout: () => void;
   deleteUser: () => Promise<void>;
+  resetPassword: (email: string, newPassword: string) => Promise<string>;
+  sendVerificationCode: (email: string) => Promise<string>;
+  verifyOTP: (email: string, code: string) => Promise<string>;
   isLoading: boolean;
 };
 
@@ -116,8 +119,73 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const resetPassword = async (email: string, newPassword: string): Promise<string> => {
+    try {
+      const response = await fetch(`${API_URL}/users/resetPassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password:newPassword }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to reset password");
+      }
+
+      const data = await response.json();
+      return data.message;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  };
+
+  const sendVerificationCode = async (email: string): Promise<string> => {
+    try {
+      const response = await fetch(`${API_URL}/users/sendVerificationCode`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to send verification code");
+      }
+
+      const data = await response.json();
+      return data.message;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  };
+
+  const verifyOTP = async (email: string, code: string): Promise<string> => {
+    try {
+      const response = await fetch(`http://localhost:5000/testa/api/users/verifyOTP/${email}/${code}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Invalid or expired code");
+      }
+
+      const data = await response.json();
+      return data.message;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  };
+
   return (
-      <AuthContext.Provider value={{ user, login, signup, logout, deleteUser, isLoading }}>
+      <AuthContext.Provider value={{ user, login, signup, logout, deleteUser, resetPassword, sendVerificationCode, verifyOTP, isLoading }}>
         {children}
       </AuthContext.Provider>
   );

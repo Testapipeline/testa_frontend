@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 interface EmailVerificationProps {
     email: string;
@@ -6,8 +7,11 @@ interface EmailVerificationProps {
 }
 
 const EmailVerification: React.FC<EmailVerificationProps> = ({ email, onVerify }) => {
+    const { sendVerificationCode } = useAuth();
     const [code, setCode] = useState(["", "", "", ""]);
     const [timer, setTimer] = useState(30);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -34,6 +38,18 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({ email, onVerify }
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onVerify(code.join(""));
+    };
+
+    const handleResendOTP = async () => {
+        try {
+            const message = await sendVerificationCode(email);
+            setSuccess(message);
+            setTimer(30);
+            setTimeout(() => setSuccess(""), 3000);
+        } catch (err: any) {
+            setError(err.message);
+            setTimeout(() => setError(""), 3000);
+        }
     };
 
     return (
@@ -63,10 +79,25 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({ email, onVerify }
                 </button>
             </form>
             <div className="mt-6 text-center">
+                {error && (
+                    <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                    </div>
+                )}
+                {success && (
+                    <div className="bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                        {success}
+                    </div>
+                )}
                 {timer > 0 ? (
                     <p className="text-sm text-gray-600">Didn't receive code? Resend OTP in {timer} seconds</p>
                 ) : (
-                    <button className="text-sm font-medium text-blue-600 hover:text-blue-500">Resend OTP</button>
+                    <button
+                        onClick={handleResendOTP}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                    >
+                        Resend OTP
+                    </button>
                 )}
             </div>
         </>

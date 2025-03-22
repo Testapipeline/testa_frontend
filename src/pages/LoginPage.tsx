@@ -7,15 +7,14 @@ import PasswordReset from "../components/PasswordReset";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const { login, user } = useAuth();
+  const { login, user, resetPassword, sendVerificationCode, verifyOTP } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [showEmailVerification, setShowEmailVerification] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (user) {
@@ -29,49 +28,55 @@ export const LoginPage = () => {
       await login(email, password);
     } catch (err) {
       setError("Invalid email or password");
+      setTimeout(() => setError(""), 3000);
     }
   };
 
-  const handleForgotPassword = () => {
+  const handleForgotPassword = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
       setError("Please fill the Email Address");
+      setTimeout(() => setError(""), 3000);
       return;
     }
     if (!emailRegex.test(email)) {
       setError("Please enter a valid email address");
+      setTimeout(() => setError(""), 3000);
       return;
     }
-    setShowEmailVerification(true);
+    try {
+      const message = await sendVerificationCode(email);
+      setSuccess(message);
+      setShowEmailVerification(true);
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (err: any) {
+      setError(err.message);
+      setTimeout(() => setError(""), 3000);
+    }
   };
 
-  const handleEmailVerification = (code: string) => {
-    if (code === "1234") {
+  const handleEmailVerification = async (code: string) => {
+    try {
+      const message = await verifyOTP(email, code);
+      setSuccess(message);
       setShowEmailVerification(false);
       setShowPasswordReset(true);
-    } else {
-      setError("Invalid verification code");
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (err: any) {
+      setError(err.message);
+      setTimeout(() => setError(""), 3000);
     }
   };
 
   const handlePasswordReset = async (newPassword: string) => {
     try {
-      const response = await fetch(`${API_URL}/users/resetPassword`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password: newPassword }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to reset password");
-      }
-
-      alert("Password successfully changed!");
-      navigate("/login");
+      const message = await resetPassword(email, newPassword);
+      setSuccess(message);
+      setTimeout(() => setSuccess(""), 3000);
+      navigate("/");
     } catch (error: any) {
       setError(error.message);
+      setTimeout(() => setError(""), 3000);
     }
   };
 
@@ -84,12 +89,17 @@ export const LoginPage = () => {
               </h2>
               <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 mx-4 sm:mx-6 lg:mx-8">
+                  {error && (
+                      <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                      </div>
+                  )}
+                  {success && (
+                      <div className="bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                        {success}
+                      </div>
+                  )}
                   <form className="space-y-6" onSubmit={handleSubmit}>
-                    {error && (
-                        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded">
-                          {error}
-                        </div>
-                    )}
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                         Email address
@@ -160,6 +170,16 @@ export const LoginPage = () => {
               </h2>
               <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 mx-4 sm:mx-6 lg:mx-8">
+                  {error && (
+                      <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                      </div>
+                  )}
+                  {success && (
+                      <div className="bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                        {success}
+                      </div>
+                  )}
                   <EmailVerification email={email} onVerify={handleEmailVerification} />
                 </div>
               </div>
@@ -172,6 +192,16 @@ export const LoginPage = () => {
               </h2>
               <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 mx-4 sm:mx-6 lg:mx-8">
+                  {error && (
+                      <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                      </div>
+                  )}
+                  {success && (
+                      <div className="bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                        {success}
+                      </div>
+                  )}
                   <PasswordReset onReset={handlePasswordReset} />
                 </div>
               </div>
